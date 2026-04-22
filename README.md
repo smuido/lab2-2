@@ -1,4 +1,4 @@
 **SQL-T**
 
-**Group Members/n**
+**Group Members\n**
 Smaya Guido, slguido@calpoly.edu
