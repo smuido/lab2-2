@@ -2,3 +2,4 @@
 <h2>Group Members</h2>
 <p>Smaya Guido, slguido@calpoly.edu</p>
 <p>Rosalind Thies, thies@calpoly.edu</p>
+<p>Eman Castillo, ecasti36@calpoly.edu</p>
