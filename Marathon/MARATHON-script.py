@@ -21,7 +21,7 @@ FIELD_SPECS = [
     ("FirstName", "FirstName", "text"),
     ("LastName", "LastName", "text"),
     ("Town", "Town", "text"),
-    ("State", "State", "text"),
+    ("State", "State", "text")
 ]
 
 CSV_HEADER_ALIASES = {

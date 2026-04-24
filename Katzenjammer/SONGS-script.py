@@ -10,7 +10,7 @@ OUTPUT_SQL = BASE_DIR / "Katzenjammer-build-SONGS.sql"
 
 FIELD_SPECS = [
     ("SongId", "SongId", "int"),
-    ("Title", "Title", "varchar(100)"),
+    ("Title", "Title", "varchar(100)")
 ]
 
 CSV_HEADER_ALIASES: dict[str, str] = {}

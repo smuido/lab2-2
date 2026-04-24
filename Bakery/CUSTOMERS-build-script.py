@@ -11,7 +11,7 @@ OUTPUT_SQL = BASE_DIR / "Bakery-build-CUSTOMERS.sql"
 FIELD_SPECS = [
     ("Id", "Id", "int"),
     ("LastName", "LastName", "varchar(50)"),
-    ("FirstName", "FirstName", "varchar(50)"),
+    ("FirstName", "FirstName", "varchar(50)")
 ]
 
 CSV_HEADER_ALIASES: dict[str, str] = {}

@@ -4,19 +4,19 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 
 TABLE_NAME = "PERFORMANCE"
-COLUMNS = ["SongId", "BandmateId", "StagePosition"]
+COLUMNS = ["SongId", "Bandmate", "StagePosition"]
 INPUT_CSV = BASE_DIR / "Performance.csv"
 OUTPUT_SQL = BASE_DIR / "Katzenjammer-build-PERFORMANCE.sql"
 
 FIELD_SPECS = [
     ("SongId", "SongId", "int"),
-    ("BandmateId", "BandmateId", "int"),
-    ("StagePosition", "StagePosition", "varchar(50)"),
+    ("Bandmate", "Bandmate", "int"),
+    ("StagePosition", "StagePosition", "varchar(50)")
 ]
 
 CSV_HEADER_ALIASES: dict[str, str] = {
     "SongId": "SongId",
-    "BandmateId": "Bandmate",
+    "Bandmate": "Bandmate",
     "StagePosition": "Stage Position",
 }
 

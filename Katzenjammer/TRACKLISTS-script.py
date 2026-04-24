@@ -11,7 +11,7 @@ OUTPUT_SQL = BASE_DIR / "Katzenjammer-build-TRACKLISTS.sql"
 FIELD_SPECS = [
     ("AlbumId", "AlbumId", "int"),
     ("Position", "Position", "int"),
-    ("SongId", "SongId", "int"),
+    ("SongId", "SongId", "int")
 ]
 
 CSV_HEADER_ALIASES: dict[str, str] = {}

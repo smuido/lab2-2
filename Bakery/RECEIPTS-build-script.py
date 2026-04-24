@@ -12,7 +12,7 @@ OUTPUT_SQL = BASE_DIR / "Bakery-build-RECEIPTS.sql"
 FIELD_SPECS = [
     ("ReceiptNumber", "ReceiptNumber", "int"),
     ("Date", "Date", "date"),
-    ("CustomerId", "CustomerId", "int"),
+    ("CustomerId", "CustomerId", "int")
 ]
 
 CSV_HEADER_ALIASES: dict[str, str] = {}

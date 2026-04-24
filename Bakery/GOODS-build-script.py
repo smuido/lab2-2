@@ -9,10 +9,10 @@ INPUT_CSV = BASE_DIR / "goods.csv"
 OUTPUT_SQL = BASE_DIR / "Bakery-build-GOODS.sql"
 
 FIELD_SPECS = [
-    ("Id", "Id", "int"),
+    ("Id", "Id", "varchar(50)"),
     ("Flavor", "Flavor", "varchar(50)"),
     ("Food", "Food", "varchar(50)"),
-    ("Price", "Price", "decimal(6,2)"),
+    ("Price", "Price", "decimal(4,2)")
 ]
 
 CSV_HEADER_ALIASES: dict[str, str] = {}

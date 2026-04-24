@@ -4,18 +4,18 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 
 TABLE_NAME = "VOCALS"
-COLUMNS = ["SongId", "BandmateId", "Type"]
+COLUMNS = ["SongId", "Bandmate", "Type"]
 INPUT_CSV = BASE_DIR / "Vocals.csv"
 OUTPUT_SQL = BASE_DIR / "Katzenjammer-build-VOCALS.sql"
 
 FIELD_SPECS = [
     ("SongId", "SongId", "int"),
-    ("BandmateId", "BandmateId", "int"),
-    ("Type", "Type", "varchar(50)"),
+    ("Bandmate", "Bandmate", "int"),
+    ("Type", "Type", "varchar(50)")
 ]
 
 CSV_HEADER_ALIASES: dict[str, str] = {
-    "BandmateId": "Bandmate",
+    "Bandmate": "Bandmate",
 }
 
 def sql_quote(value: str) -> str:

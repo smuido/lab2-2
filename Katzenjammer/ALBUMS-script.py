@@ -12,7 +12,7 @@ FIELD_SPECS = [
     ("AId", "AId", "int"),
     ("Title", "Title", "varchar(100)"),
     ("Year", "Year", "int"),
-    ("Label", "Label", "varchar(100)"),
+    ("Label", "Label", "varchar(100)")
 ]
 
 CSV_HEADER_ALIASES: dict[str, str] = {}
