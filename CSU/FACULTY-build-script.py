@@ -11,7 +11,7 @@ OUTPUT_SQL = BASE_DIR / "CSU-build-FACULTY.sql"
 FIELD_SPECS = [
     ("Campus", "Campus", "int"),
     ("Year", "Year", "int"),
-    ("Faculty", "Faculty", "int"),
+    ("Faculty", "Faculty", "decimal(6,1)"),
 ]
 
 CSV_HEADER_ALIASES: dict[str, str] = {}

@@ -5,14 +5,14 @@ BASE_DIR = Path(__file__).resolve().parent
 
 TABLE_NAME = "CAMPUSES"
 COLUMNS = ["Id", "Campus", "Location", "County", "Year"]
-INPUT_CSV = BASE_DIR / "campuses.csv"
+INPUT_CSV = BASE_DIR / "Campuses.csv"
 OUTPUT_SQL = BASE_DIR / "CSU-build-CAMPUSES.sql"
 
 FIELD_SPECS = [
     ("Id", "Id", "int"),
     ("Campus", "Campus", "varchar(50)"),
     ("Location", "Location", "varchar(50)"),
-    ("County", "County", "varchar(50)")
+    ("County", "County", "varchar(50)"),
     ("Year", "Year", "int")
 ]
 

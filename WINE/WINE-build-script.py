@@ -51,7 +51,7 @@ def sql_value(raw_value: str | None, kind: str) -> str:
         return "NULL"
 
     value = raw_value.strip().strip("'\"")
-    if value == "":
+    if value == "" or value.upper() == "NULL":
         return "NULL"
 
     if kind == "int":

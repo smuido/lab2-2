@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent
 
 TABLE_NAME = "CSU_FEES"
 COLUMNS = ["Campus", "Year", "CampusFee"]
-INPUT_CSV = BASE_DIR / "csu_fees.csv"
+INPUT_CSV = BASE_DIR / "csu-fees.csv"
 OUTPUT_SQL = BASE_DIR / "CSU-build-CSU_FEES.sql"
 
 FIELD_SPECS = [
