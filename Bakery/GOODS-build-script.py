@@ -4,15 +4,16 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 
-TABLE_NAME = "INSTRUMENTS"
-COLUMNS = ["SongId", "BandmateId", "Instrument"]
-INPUT_CSV = BASE_DIR / "Instruments.csv"
-OUTPUT_SQL = BASE_DIR / "Katzenjammer-build-INSTRUMENTS.sql"
+TABLE_NAME = "GOODS"
+COLUMNS = ["Id", "Flavor", "Food", "Price"]
+INPUT_CSV = BASE_DIR / "goods.csv"
+OUTPUT_SQL = BASE_DIR / "Bakery-build-GOODS.sql"
 
 FIELD_SPECS = [
-    ("SongId", "SongId", "int"),
-    ("BandmateId", "BandmateId", "int"),
-    ("Instrument", "Instrument", "text"),
+    ("Id", "Id", "text"),
+    ("Flavor", "Flavor", "text"),
+    ("Food", "Food", "text"),
+    ("Price", "Price", "float"),
 ]
 
 CSV_HEADER_ALIASES: dict[str, str] = {}
@@ -70,6 +71,9 @@ def sql_value(raw_value: str | None, kind: str) -> str:
 
     if kind == "int":
         return str(int(value))
+
+    if kind == "float":
+        return str(float(value))
 
     if kind == "date":
         return sql_quote(normalize_date(value))

@@ -2,10 +2,23 @@ import csv
 from datetime import datetime
 from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent
+
 TABLE_NAME = "BAND"
 COLUMNS = ["Id", "FirstName", "LastName"]
-INPUT_CSV = Path("BAND.csv")
-OUTPUT_SQL = Path("Katzenjammer-build-BAND.sql")
+INPUT_CSV = BASE_DIR / "Band.csv"
+OUTPUT_SQL = BASE_DIR / "Katzenjammer-build-BAND.sql"
+
+FIELD_SPECS = [
+    ("Id", "Id", "int"),
+    ("FirstName", "FirstName", "text"),
+    ("LastName", "LastName", "text"),
+]
+
+CSV_HEADER_ALIASES: dict[str, str] = {
+    "FirstName": "Firstname",
+    "LastName": "Lastname",
+}
 
 DATE_FORMATS = (
     "%Y-%m-%d",
@@ -15,15 +28,29 @@ DATE_FORMATS = (
     "%d-%b-%Y",
 )
 
-FIELD_SPECS = [
-    ("Id", "Id", "int"),
-    ("FirstName", "FirstName", "text"),
-    ("LastName", "LastName", "text"),
-]
-
 
 def sql_quote(value: str) -> str:
     return "'" + value.replace("'", "''") + "'"
+
+
+def normalize_header(value: str) -> str:
+    return "".join(ch.lower() for ch in value if ch.isalnum())
+
+
+def get_csv_value(row: dict[str, str], csv_column: str) -> str | None:
+    normalized_target = normalize_header(csv_column)
+    for header, value in row.items():
+        if normalize_header(header) == normalized_target:
+            return value
+
+    alias = CSV_HEADER_ALIASES.get(csv_column)
+    if alias is not None:
+        normalized_alias = normalize_header(alias)
+        for header, value in row.items():
+            if normalize_header(header) == normalized_alias:
+                return value
+
+    return None
 
 
 def normalize_date(raw_value: str) -> str:
@@ -40,7 +67,7 @@ def sql_value(raw_value: str | None, kind: str) -> str:
     if raw_value is None:
         return "NULL"
 
-    value = raw_value.strip()
+    value = raw_value.strip().strip("'\"")
     if value == "":
         return "NULL"
 
@@ -60,7 +87,7 @@ def main() -> None:
         reader = csv.DictReader(infile)
         for row in reader:
             values = [
-                sql_value(row.get(csv_column), kind)
+                sql_value(get_csv_value(row, csv_column), kind)
                 for _, csv_column, kind in FIELD_SPECS
             ]
             outfile.write(
