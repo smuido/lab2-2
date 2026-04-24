@@ -15,6 +15,12 @@ DATE_FORMATS = (
     "%d-%b-%Y",
 )
 
+FIELD_SPECS = [
+    ("ReceiptNumber", "ReceiptNumber", "int"),
+    ("Date", "Date", "date"),
+    ("CustomerId", "CustomerId", "int"),
+]
+
 
 def sql_quote(value: str) -> str:
     return "'" + value.replace("'", "''") + "'"
@@ -30,17 +36,35 @@ def normalize_date(raw_value: str) -> str:
     raise ValueError(f"Unsupported date format: {raw_value}")
 
 
+def sql_value(raw_value: str | None, kind: str) -> str:
+    if raw_value is None:
+        return "NULL"
+
+    value = raw_value.strip()
+    if value == "":
+        return "NULL"
+
+    if kind == "int":
+        return str(int(value))
+
+    if kind == "date":
+        return sql_quote(normalize_date(value))
+
+    return sql_quote(value)
+
+
 def main() -> None:
     with INPUT_CSV.open("r", newline="", encoding="utf-8-sig") as infile, OUTPUT_SQL.open(
         "w", encoding="utf-8"
     ) as outfile:
         reader = csv.DictReader(infile)
         for row in reader:
-            receipt_number = int(row["ReceiptNumber"])
-            receipt_date = sql_quote(normalize_date(row["Date"]))
-            customer_id = int(row["CustomerId"])
+            values = [
+                sql_value(row.get(csv_column), kind)
+                for _, csv_column, kind in FIELD_SPECS
+            ]
             outfile.write(
-                f"INSERT INTO {TABLE_NAME} ({', '.join(COLUMNS)}) VALUES ({receipt_number}, {receipt_date}, {customer_id});\n"
+                f"INSERT INTO {TABLE_NAME} ({', '.join(COLUMNS)}) VALUES ({', '.join(values)});\n"
             )
 
     print(f"Wrote {OUTPUT_SQL}")

@@ -1,25 +1,74 @@
-import mysql.connector as SQLC
+import csv
+from datetime import datetime
+from pathlib import Path
 
-# Connect to the database
-db = SQLC.connect(host="localhost", user="root", password="", database="Katzenjammer")
-cursor = db.cursor()
+TABLE_NAME = "INSTRUMENTS"
+COLUMNS = ["SongId", "BandmateId", "Instrument"]
+INPUT_CSV = Path("INSTRUMENTS.csv")
+OUTPUT_SQL = Path("Katzenjammer-build-INSTRUMENTS.sql")
 
-# Create the database if it doesn't exist
-cursor.execute("CREATE DATABASE IF NOT EXISTS Katzenjammer")
-
-# Create the table
-cursor.execute("CREATE TABLE IF NOT EXISTS INSTRUMENTS (" \
-    "SongId INT NOT NULL FOREIGN KEY REFERENCES SONGS(SongId)," \
-    "BandmateId INT NOT NULL FOREIGN KEY REFERENCES BAND(Id)," \
-    "Instrument VARCHAR(100) NOT NULL," \
-    "PRIMARY KEY (SongId, BandmateId, Instrument),"
+DATE_FORMATS = (
+    "%Y-%m-%d",
+    "%m/%d/%Y",
+    "%m/%d/%y",
+    "%Y/%m/%d",
+    "%d-%b-%Y",
 )
 
-# Insert data by reading CSV
-with open("INSTRUMENTS.csv", "r") as file:
-    next(file)  # Skip the header
-    for line in file:
-        song_id, bandmate_id, instrument = line.strip().split(",")
-        cursor.execute("INSERT INTO INSTRUMENTS (SongId, BandmateId, Instrument) VALUES (%i, %i, %s)", 
-                       (song_id, bandmate_id, instrument))
-    db.commit()
+FIELD_SPECS = [
+    ("SongId", "SongId", "int"),
+    ("BandmateId", "BandmateId", "int"),
+    ("Instrument", "Instrument", "text"),
+]
+
+
+def sql_quote(value: str) -> str:
+    return "'" + value.replace("'", "''") + "'"
+
+
+def normalize_date(raw_value: str) -> str:
+    cleaned = raw_value.strip()
+    for fmt in DATE_FORMATS:
+        try:
+            return datetime.strptime(cleaned, fmt).strftime("%Y-%m-%d")
+        except ValueError:
+            pass
+    raise ValueError(f"Unsupported date format: {raw_value}")
+
+
+def sql_value(raw_value: str | None, kind: str) -> str:
+    if raw_value is None:
+        return "NULL"
+
+    value = raw_value.strip()
+    if value == "":
+        return "NULL"
+
+    if kind == "int":
+        return str(int(value))
+
+    if kind == "date":
+        return sql_quote(normalize_date(value))
+
+    return sql_quote(value)
+
+
+def main() -> None:
+    with INPUT_CSV.open("r", newline="", encoding="utf-8-sig") as infile, OUTPUT_SQL.open(
+        "w", encoding="utf-8"
+    ) as outfile:
+        reader = csv.DictReader(infile)
+        for row in reader:
+            values = [
+                sql_value(row.get(csv_column), kind)
+                for _, csv_column, kind in FIELD_SPECS
+            ]
+            outfile.write(
+                f"INSERT INTO {TABLE_NAME} ({', '.join(COLUMNS)}) VALUES ({', '.join(values)});\n"
+            )
+
+    print(f"Wrote {OUTPUT_SQL}")
+
+
+if __name__ == "__main__":
+    main()
