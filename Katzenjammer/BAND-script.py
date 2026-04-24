@@ -11,22 +11,16 @@ OUTPUT_SQL = BASE_DIR / "Katzenjammer-build-BAND.sql"
 
 FIELD_SPECS = [
     ("Id", "Id", "int"),
-    ("FirstName", "FirstName", "text"),
-    ("LastName", "LastName", "text"),
+    ("FirstName", "FirstName", "varchar(50)"),
+    ("LastName", "LastName", "varchar(50)"),
 ]
 
 CSV_HEADER_ALIASES: dict[str, str] = {
+    "Id": "Id",
     "FirstName": "Firstname",
     "LastName": "Lastname",
 }
 
-DATE_FORMATS = (
-    "%Y-%m-%d",
-    "%m/%d/%Y",
-    "%m/%d/%y",
-    "%Y/%m/%d",
-    "%d-%b-%Y",
-)
 
 
 def sql_quote(value: str) -> str:
@@ -52,17 +46,6 @@ def get_csv_value(row: dict[str, str], csv_column: str) -> str | None:
 
     return None
 
-
-def normalize_date(raw_value: str) -> str:
-    cleaned = raw_value.strip()
-    for fmt in DATE_FORMATS:
-        try:
-            return datetime.strptime(cleaned, fmt).strftime("%Y-%m-%d")
-        except ValueError:
-            pass
-    raise ValueError(f"Unsupported date format: {raw_value}")
-
-
 def sql_value(raw_value: str | None, kind: str) -> str:
     if raw_value is None:
         return "NULL"
@@ -73,9 +56,6 @@ def sql_value(raw_value: str | None, kind: str) -> str:
 
     if kind == "int":
         return str(int(value))
-
-    if kind == "date":
-        return sql_quote(normalize_date(value))
 
     return sql_quote(value)
 

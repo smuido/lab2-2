@@ -10,21 +10,13 @@ INPUT_CSV = BASE_DIR / "goods.csv"
 OUTPUT_SQL = BASE_DIR / "Bakery-build-GOODS.sql"
 
 FIELD_SPECS = [
-    ("Id", "Id", "text"),
-    ("Flavor", "Flavor", "text"),
-    ("Food", "Food", "text"),
-    ("Price", "Price", "float"),
+    ("Id", "Id", "int"),
+    ("Flavor", "Flavor", "varchar(50)"),
+    ("Food", "Food", "varchar(50)"),
+    ("Price", "Price", "decimal(6,2)"),
 ]
 
 CSV_HEADER_ALIASES: dict[str, str] = {}
-
-DATE_FORMATS = (
-    "%Y-%m-%d",
-    "%m/%d/%Y",
-    "%m/%d/%y",
-    "%Y/%m/%d",
-    "%d-%b-%Y",
-)
 
 
 def sql_quote(value: str) -> str:
@@ -51,16 +43,6 @@ def get_csv_value(row: dict[str, str], csv_column: str) -> str | None:
     return None
 
 
-def normalize_date(raw_value: str) -> str:
-    cleaned = raw_value.strip()
-    for fmt in DATE_FORMATS:
-        try:
-            return datetime.strptime(cleaned, fmt).strftime("%Y-%m-%d")
-        except ValueError:
-            pass
-    raise ValueError(f"Unsupported date format: {raw_value}")
-
-
 def sql_value(raw_value: str | None, kind: str) -> str:
     if raw_value is None:
         return "NULL"
@@ -72,11 +54,8 @@ def sql_value(raw_value: str | None, kind: str) -> str:
     if kind == "int":
         return str(int(value))
 
-    if kind == "float":
+    if kind == "decimal(6,2)":
         return str(float(value))
-
-    if kind == "date":
-        return sql_quote(normalize_date(value))
 
     return sql_quote(value)
 
