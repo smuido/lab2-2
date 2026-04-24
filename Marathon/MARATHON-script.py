@@ -1,7 +1,7 @@
 import mysql.connector as SQLC
 
 # Connect to the database
-db = SQLC.connect(host="localhost", user="root", password="", database="Katzenjammer")
+db = SQLC.connect(database="Maarathon")
 cursor = db.cursor()
 
 # Create the database if it doesn't exist
